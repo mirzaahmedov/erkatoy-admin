@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { AuthPage } from "./auth/page";
 import { AuthGuard } from "@/features/auth/components/AuthGuard";
 import { AppLayout } from "@/components/AppLayout";
+import { CategoryPage } from "./category/page";
 
 const router = createBrowserRouter(
   [
@@ -16,6 +17,10 @@ const router = createBrowserRouter(
             {
               index: true,
               element: "hello",
+            },
+            {
+              path: "category",
+              element: <CategoryPage />,
             },
           ],
         },

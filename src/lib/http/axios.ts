@@ -2,7 +2,7 @@ import { useAuthStore } from "@/features/auth/store";
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://5l2q09wq-4001.euw.devtunnels.ms",
+  baseURL: "http://192.168.102.68:4001",
 });
 
 api.interceptors.request.use((config) => {
