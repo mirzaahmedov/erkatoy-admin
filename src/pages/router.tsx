@@ -1,8 +1,13 @@
-import { createBrowserRouter } from "react-router-dom";
-import { AuthPage } from "./auth/page";
-import { AuthGuard } from "@/features/auth/components/AuthGuard";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+
 import { AppLayout } from "@/components/AppLayout";
+import { AuthGuard } from "@/features/auth/components/AuthGuard";
+
+import { AuthPage } from "./auth/page";
 import { CategoryPage } from "./category/page";
+import { TagPage } from "./tag/page";
+import { PostPage } from "./post/page";
+import { PostViewPage } from "./post/[id]/page";
 
 const router = createBrowserRouter(
   [
@@ -15,12 +20,24 @@ const router = createBrowserRouter(
           element: <AppLayout />,
           children: [
             {
-              index: true,
-              element: "hello",
+              path: "tag",
+              element: <TagPage />,
             },
             {
               path: "category",
               element: <CategoryPage />,
+            },
+            {
+              path: "post",
+              element: <PostPage />,
+            },
+            {
+              path: "post/:id",
+              element: <PostViewPage />,
+            },
+            {
+              path: "*",
+              element: <Navigate to="/post" />,
             },
           ],
         },

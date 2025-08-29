@@ -1,6 +1,7 @@
+import type { FC } from "react";
+
 import { colorSchemeDark, themeQuartz } from "ag-grid-community";
 import { AgGridReact, type AgGridReactProps } from "ag-grid-react";
-import type { FC } from "react";
 
 export const GenericTable: FC<AgGridReactProps> = (props) => {
   return (
@@ -9,6 +10,7 @@ export const GenericTable: FC<AgGridReactProps> = (props) => {
       defaultColDef={{
         sortable: false,
       }}
+      rowHeight={50}
       {...props}
     />
   );

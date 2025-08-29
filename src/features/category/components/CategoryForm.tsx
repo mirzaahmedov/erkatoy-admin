@@ -1,23 +1,39 @@
 import type { CategoryFormValues } from "../schema";
-import type { FC, ReactNode } from "react";
+import type { ICategory } from "@/entities/category";
+import { useEffect, type FC, type ReactNode } from "react";
+
 import { Switch, TextField } from "@adobe/react-spectrum";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, type UseFormReturn } from "react-hook-form";
 import { Form } from "react-router-dom";
+
+const defaultValues: CategoryFormValues = {
+  name: "",
+  is_active: true,
+};
 
 export const CategoryForm: FC<{
   onSubmit: (values: CategoryFormValues) => void;
+  categoryData?: ICategory;
   isPending: boolean;
-  actions: ReactNode;
+  actions: (form: UseFormReturn<CategoryFormValues>) => ReactNode;
 }> = (props) => {
-  const { onSubmit, isPending, actions } = props;
+  const { onSubmit, categoryData, isPending, actions } = props;
 
   const form = useForm<CategoryFormValues>({
     disabled: isPending,
-    defaultValues: {
-      name: "",
-      is_active: true,
-    },
+    defaultValues,
   });
+
+  useEffect(() => {
+    if (categoryData) {
+      form.reset({
+        name: categoryData.name,
+        is_active: categoryData.is_active,
+      });
+    } else {
+      form.reset(defaultValues);
+    }
+  }, [form, categoryData]);
 
   return (
     <Form
@@ -27,11 +43,12 @@ export const CategoryForm: FC<{
       <Controller
         control={form.control}
         name="name"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <TextField
             {...field}
             label="Name"
             width="100%"
+            errorMessage={fieldState.error?.message}
           />
         )}
       />
@@ -50,7 +67,7 @@ export const CategoryForm: FC<{
           </Switch>
         )}
       />
-      {actions}
+      {actions(form)}
     </Form>
   );
 };

@@ -1,7 +1,8 @@
-import type { ComponentType, FC, SVGAttributes } from "react";
-import { BiCard, BiSolidGrid, BiTag } from "react-icons/bi";
-import { NavLink } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
+import type { ComponentType, FC, SVGAttributes } from 'react'
+
+import { BiCard, BiSolidGrid, BiTag } from 'react-icons/bi'
+import { NavLink } from 'react-router-dom'
+import { twMerge } from 'tailwind-merge'
 
 export const AppSidebar = () => {
   return (
@@ -24,15 +25,15 @@ export const AppSidebar = () => {
         />
       </ul>
     </aside>
-  );
-};
+  )
+}
 
 const NavItem: FC<{
-  label: string;
-  to: string;
-  icon: ComponentType<SVGAttributes<SVGElement>>;
+  label: string
+  to: string
+  icon: ComponentType<SVGAttributes<SVGElement>>
 }> = (props) => {
-  const { label, to, icon: Icon } = props;
+  const { label, to, icon: Icon } = props
 
   return (
     <li>
@@ -40,13 +41,13 @@ const NavItem: FC<{
         to={to}
         className={({ isActive }) =>
           twMerge(
-            "mb-1 px-4 py-2 font-semibold cursor-pointer flex items-center gap-2.5 hover:bg-neutral-800 rounded-md transition-colors",
-            isActive && "bg-blue-500/10 hover:bg-blue-500/10 text-blue-400",
+            'mb-1 px-4 py-2 font-semibold cursor-pointer flex items-center gap-2.5 hover:bg-neutral-800 rounded-md transition-colors',
+            isActive && 'bg-blue-500/10 hover:bg-blue-500/10 text-blue-400'
           )
         }
       >
         <Icon className="size-6" /> {label}
       </NavLink>
     </li>
-  );
-};
+  )
+}

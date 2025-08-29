@@ -1,6 +1,3 @@
-import { useAuthStore } from "@/features/auth/store";
-import { useLayoutStore } from "@/features/layout/store";
-import { parseAsBoolean, useQueryState } from "nuqs";
 import {
   Avatar,
   Badge,
@@ -10,7 +7,11 @@ import {
   Item,
   Text,
 } from "@adobe/react-spectrum";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { BiExit, BiPlus } from "react-icons/bi";
+
+import { useAuthStore } from "@/features/auth/store";
+import { useLayoutStore } from "@/features/layout/store";
 
 export const AppHeader = () => {
   const layout = useLayoutStore();
@@ -21,11 +22,11 @@ export const AppHeader = () => {
     parseAsBoolean.withDefault(false),
   );
 
-  const { title, enableCreate, breadcrumbs } = layout;
+  const { title, enableCreate, breadcrumbs, onCreate } = layout;
 
   return (
-    <header className="border-b border-neutral-700 p-5">
-      <nav className="flex justify-between">
+    <header className="border-b border-neutral-700 h-20 px-5">
+      <nav className="h-full flex justify-between">
         <div className="flex items-center">
           <div className="w-60 flex items-center gap-5">
             <h1 className="text-xl uppercase !font-family-display">Erkatoy</h1>
@@ -39,10 +40,7 @@ export const AppHeader = () => {
 
           <div>
             {breadcrumbs ? (
-              <Breadcrumbs
-                showRoot
-                isMultiline
-              >
+              <Breadcrumbs>
                 {[...breadcrumbs, { to: "", title }].map((item) => (
                   <Item key={item.to}>{item.title}</Item>
                 ))}
@@ -56,7 +54,10 @@ export const AppHeader = () => {
             <Button
               variant="accent"
               style="fill"
-              onPress={() => setCreateOpen(true)}
+              onPress={() => {
+                setCreateOpen(true);
+                onCreate?.();
+              }}
             >
               <Text>Create</Text>
               <Icon>

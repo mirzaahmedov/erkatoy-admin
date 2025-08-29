@@ -1,1 +1,1 @@
-export * from "./components/CategoryTable";
+export * from './components/CategoryTable'

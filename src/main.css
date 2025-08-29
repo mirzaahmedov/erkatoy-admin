@@ -21,8 +21,13 @@ body.swal2-shown.swal2-height-auto,
   font-family: var(--font-family-sans);
 }
 
+button {
+  cursor: pointer !important;
+}
+
 button svg,
 button span {
+  display: inline-block !important;
   vertical-align: middle !important;
 }
 
@@ -34,4 +39,9 @@ body {
 
 .ag-root-wrapper {
   border-radius: 0;
+}
+
+.ag-root-wrapper .ag-row .ag-cell {
+  display: flex;
+  align-items: center;
 }

@@ -2,5 +2,19 @@
  * @type { import("prettier").Config }
  */
 export default {
+  plugins: ['@trivago/prettier-plugin-sort-imports'],
+
+  importOrder: ['<TS_TYPES>', '^react$', '<THIRD_PARTY_MODULES>', '^@/.*$', '^[./]'],
+
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+
+  typescript: { alwaysUseImportType: true },
+
+  singleQuote: true,
+  bracketSameLine: false,
   singleAttributePerLine: true,
-};
+  semi: false,
+  printWidth: 100,
+  trailingComma: 'none'
+}

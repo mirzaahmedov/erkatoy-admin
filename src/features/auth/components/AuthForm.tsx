@@ -1,27 +1,23 @@
-import {
-  Button,
-  Checkbox,
-  Form,
-  Heading,
-  TextField,
-} from "@adobe/react-spectrum";
-import { useState, type FC } from "react";
-import { Controller, useForm } from "react-hook-form";
-import type { AuthFormValues } from "../schema";
+import type { AuthFormValues } from '../schema'
+
+import { type FC, useState } from 'react'
+
+import { Button, Checkbox, Form, Heading, TextField } from '@adobe/react-spectrum'
+import { Controller, useForm } from 'react-hook-form'
 
 export interface AuthFormProps {
-  onSubmit: (data: AuthFormValues) => void;
-  isPending: boolean;
+  onSubmit: (data: AuthFormValues) => void
+  isPending: boolean
 }
 export const AuthForm: FC<AuthFormProps> = ({ onSubmit, isPending }) => {
   const form = useForm<AuthFormValues>({
     defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
+      username: '',
+      password: ''
+    }
+  })
 
-  const [isPasswordVisible, setPasswordVisible] = useState(false);
+  const [isPasswordVisible, setPasswordVisible] = useState(false)
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -48,7 +44,7 @@ export const AuthForm: FC<AuthFormProps> = ({ onSubmit, isPending }) => {
           <TextField
             {...field}
             label="Password"
-            type={isPasswordVisible ? "text" : "password"}
+            type={isPasswordVisible ? 'text' : 'password'}
           />
         )}
       />
@@ -69,5 +65,5 @@ export const AuthForm: FC<AuthFormProps> = ({ onSubmit, isPending }) => {
         Continue
       </Button>
     </Form>
-  );
-};
+  )
+}

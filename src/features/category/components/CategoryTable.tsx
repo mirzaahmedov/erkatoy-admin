@@ -1,22 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import { CategoryService } from "../api";
-import { GenericTable } from "@/components/GenericTable";
-import { formatDate } from "@/utils/format/date";
-import { Button, ButtonGroup, Checkbox, Icon } from "@adobe/react-spectrum";
 import type { CustomCellRendererProps } from "ag-grid-react";
-import { BiEdit, BiTrash } from "react-icons/bi";
 import type { FC } from "react";
 
+import { Button, ButtonGroup, Checkbox, Icon } from "@adobe/react-spectrum";
+import { BiEdit, BiTrash } from "react-icons/bi";
+
+import { GenericTable } from "@/components/GenericTable";
+import { formatDate } from "@/utils/format/date";
+
+import type { ICategory } from "@/entities/category";
+
 export interface CategoryTableProps {
+  rowData: ICategory[];
+  onEdit: (category: ICategory) => void;
   onDelete: (id: number) => void;
 }
-export const CategoryTable: FC<CategoryTableProps> = ({ onDelete }) => {
-  const categoryQuery = useQuery({
-    queryKey: [CategoryService.QueryKey.GetAll, { page: 1, limit: 10 }],
-    queryFn: CategoryService.getCategories,
-  });
-
-  const rowData = categoryQuery.data?.data?.data ?? [];
+export const CategoryTable: FC<CategoryTableProps> = (props) => {
+  const { rowData, onEdit, onDelete } = props;
 
   return (
     <div className="h-full">
@@ -52,8 +51,11 @@ export const CategoryTable: FC<CategoryTableProps> = ({ onDelete }) => {
             field: "actions",
             headerName: "Actions",
             cellRenderer: ({ data }: CustomCellRendererProps) => (
-              <ButtonGroup marginTop="size-50">
-                <Button variant="secondary">
+              <ButtonGroup>
+                <Button
+                  variant="secondary"
+                  onPress={() => onEdit(data)}
+                >
                   <Icon>
                     <BiEdit />
                   </Icon>

@@ -1,6 +1,6 @@
 export const formatDate = (dateString: string): string => {
   if (!dateString) {
-    return "";
+    return ''
   }
-  return new Date(dateString).toLocaleString("ru-RU");
-};
+  return new Date(dateString).toLocaleString('ru-RU')
+}
