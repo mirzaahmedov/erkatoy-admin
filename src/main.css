@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./quill.css";
 
 @theme {
   --font-family-sans: "Geist", ui-sans-serif, system-ui, sans-serif;

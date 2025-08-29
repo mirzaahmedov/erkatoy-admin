@@ -1,0 +1,51 @@
+.ql-editor {
+  font-size: 16px;
+
+  --text-size-xs: 0.64em;
+  --text-size-sm: 0.8em;
+  --text-size-md: 1em;
+  --text-size-lg: 1.25em;
+  --text-size-xl: 1.56em;
+  --text-size-2xl: 1.95em;
+  --text-size-3xl: 2.44em;
+  --text-size-4xl: 3.05em;
+  --text-size-5xl: 3.81em;
+}
+
+.ql-editor ol {
+  padding: 0;
+}
+.ql-editor :where(ul, ol) li {
+  padding: 0;
+  margin-left: 1.5em;
+}
+.ql-editor ol li {
+  list-style: decimal;
+}
+.ql-editor ul li {
+  list-style: disc;
+}
+
+.ql-snow .ql-editor strong {
+  font-weight: bold;
+}
+
+.ql-snow .ql-editor h1 {
+  font-size: var(--text-size-4xl);
+}
+.ql-snow .ql-editor h2 {
+  font-size: var(--text-size-3xl);
+}
+.ql-snow .ql-editor h3 {
+  font-size: var(--text-size-2xl);
+}
+
+.ql-snow .ql-editor h4 {
+  font-size: var(--text-size-xl);
+}
+.ql-snow .ql-editor h5 {
+  font-size: var(--text-size-lg);
+}
+.ql-snow .ql-editor h6 {
+  font-size: var(--text-size-md);
+}
