@@ -14,8 +14,6 @@ export interface IPagination {
 }
 
 export interface IApiListResponse<T> {
-  data: {
-    data: T[];
-    pagination: IPagination;
-  };
+  data: T[];
+  pagination: IPagination;
 }

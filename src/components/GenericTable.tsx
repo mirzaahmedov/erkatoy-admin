@@ -6,6 +6,9 @@ export const GenericTable: FC<AgGridReactProps> = (props) => {
   return (
     <AgGridReact
       theme={themeQuartz.withPart(colorSchemeDark)}
+      defaultColDef={{
+        sortable: false,
+      }}
       {...props}
     />
   );

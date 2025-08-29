@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export interface IBreadcrumbItem {
-  label: string;
+  title: string;
   to?: string;
 }
 

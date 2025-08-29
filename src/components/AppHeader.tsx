@@ -2,6 +2,7 @@ import { useAuthStore } from "@/features/auth/store";
 import { useLayoutStore } from "@/features/layout/store";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import {
+  Avatar,
   Badge,
   Breadcrumbs,
   Button,
@@ -23,25 +24,31 @@ export const AppHeader = () => {
   const { title, enableCreate, breadcrumbs } = layout;
 
   return (
-    <header className="border-b border-neutral-600 p-5">
+    <header className="border-b border-neutral-700 p-5">
       <nav className="flex justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-3xl uppercase !font-family-fascinate">Erkatoy</h1>
-          <Badge
-            variant="purple"
-            UNSAFE_className="font-semibold"
-          >
-            ADMIN
-          </Badge>
-          {breadcrumbs ? (
-            <Breadcrumbs showRoot>
-              {breadcrumbs.map((item) => (
-                <Item key={item.to}>{item.label}</Item>
-              ))}
-            </Breadcrumbs>
-          ) : null}
+        <div className="flex items-center">
+          <div className="w-60 flex items-center gap-5">
+            <h1 className="text-xl uppercase !font-family-display">Erkatoy</h1>
+            <Badge
+              variant="neutral"
+              UNSAFE_className="!font-bold !text-xs !text-white"
+            >
+              <Text UNSAFE_className="text-xs">ADMIN</Text>
+            </Badge>
+          </div>
 
-          <h2 className="text-lg font-medium">{title}</h2>
+          <div>
+            {breadcrumbs ? (
+              <Breadcrumbs
+                showRoot
+                isMultiline
+              >
+                {[...breadcrumbs, { to: "", title }].map((item) => (
+                  <Item key={item.to}>{item.title}</Item>
+                ))}
+              </Breadcrumbs>
+            ) : null}
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -57,12 +64,15 @@ export const AppHeader = () => {
               </Icon>
             </Button>
           )}
+          <Avatar
+            src="https://i.imgur.com/kJOwAdv.png"
+            alt="default Adobe avatar"
+          />
           <Button
             variant="secondary"
             style="fill"
             onPress={logout}
           >
-            <Text>Log Out</Text>
             <Icon>
               <BiExit />
             </Icon>

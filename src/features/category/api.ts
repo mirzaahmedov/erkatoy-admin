@@ -2,6 +2,7 @@ import type { ICategory } from "@/entities/category";
 import type { IApiListResponse, IApiResponse } from "@/entities/response";
 import type { QueryFunctionContext } from "@tanstack/react-query";
 import { api } from "@/lib/http/axios";
+import type { CategoryFormValues } from "./schema";
 
 export class CategoryService {
   static QueryKey = {
@@ -29,6 +30,24 @@ export class CategoryService {
         },
       },
     );
+    return res.data;
+  }
+
+  static async createCategory(values: CategoryFormValues) {
+    const res = await api.post<IApiResponse<ICategory>>("/category", values);
+    return res.data;
+  }
+
+  static async updateCategory(id: number, values: CategoryFormValues) {
+    const res = await api.put<IApiResponse<ICategory>>(
+      `/category/${id}`,
+      values,
+    );
+    return res.data;
+  }
+
+  static async deleteCategory(id: number) {
+    const res = await api.delete<IApiResponse<ICategory>>(`/category/${id}`);
     return res.data;
   }
 }

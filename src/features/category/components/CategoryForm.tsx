@@ -1,16 +1,18 @@
 import type { CategoryFormValues } from "../schema";
-import type { FC } from "react";
-import { Button, Switch, TextField } from "@adobe/react-spectrum";
+import type { FC, ReactNode } from "react";
+import { Switch, TextField } from "@adobe/react-spectrum";
 import { Controller, useForm } from "react-hook-form";
 import { Form } from "react-router-dom";
 
 export const CategoryForm: FC<{
   onSubmit: (values: CategoryFormValues) => void;
   isPending: boolean;
+  actions: ReactNode;
 }> = (props) => {
-  const { onSubmit, isPending } = props;
+  const { onSubmit, isPending, actions } = props;
 
   const form = useForm<CategoryFormValues>({
+    disabled: isPending,
     defaultValues: {
       name: "",
       is_active: true,
@@ -18,8 +20,10 @@ export const CategoryForm: FC<{
   });
 
   return (
-    <Form onSubmit={form.handleSubmit(onSubmit)}>
-      <h1 className="text-4xl">Create Category</h1>
+    <Form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-2.5"
+    >
       <Controller
         control={form.control}
         name="name"
@@ -27,6 +31,7 @@ export const CategoryForm: FC<{
           <TextField
             {...field}
             label="Name"
+            width="100%"
           />
         )}
       />
@@ -45,15 +50,7 @@ export const CategoryForm: FC<{
           </Switch>
         )}
       />
-      <Button
-        type="submit"
-        style="fill"
-        variant="accent"
-        isDisabled={isPending}
-        isPending={isPending}
-      >
-        Continue
-      </Button>
+      {actions}
     </Form>
   );
 };
