@@ -1,10 +1,12 @@
-import type { PostFormValues } from "../schema";
-import type { IPost } from "@/entities/post";
-import { useEffect, useState, type FC, type ReactNode } from "react";
+import type { PostFormValues } from '../schema'
+import type { IPost } from '@/entities/post'
+
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 
 import {
   Button,
   ComboBox,
+  type DropItem,
   DropZone,
   FileTrigger,
   Flex,
@@ -16,48 +18,47 @@ import {
   Text,
   TextArea,
   TextField,
-  View,
-  type DropItem,
-} from "@adobe/react-spectrum";
-import { Controller, useForm, type UseFormReturn } from "react-hook-form";
-import { Form } from "react-router-dom";
-import { QuillEditor } from "@/components/QuillEditor";
+  View
+} from '@adobe/react-spectrum'
+import Upload from '@spectrum-icons/illustrations/Upload'
+import { useQuery } from '@tanstack/react-query'
+import { Controller, type UseFormReturn, useForm } from 'react-hook-form'
+import { BiEdit } from 'react-icons/bi'
+import { Form } from 'react-router-dom'
 
-import Upload from "@spectrum-icons/illustrations/Upload";
-import { BiEdit } from "react-icons/bi";
-import { useQuery } from "@tanstack/react-query";
-import { CategoryService } from "@/features/category/api";
-import { getImageUrl } from "@/utils/image";
+import { QuillEditor } from '@/components/QuillEditor'
+import { CategoryService } from '@/features/category/api'
+import { getImageUrl } from '@/utils/image'
 
 const defaultValues: PostFormValues = {
-  title: "",
-  content: "",
-  descr: "",
-  fio: "",
-  tags: [],
-};
+  title: '',
+  content: '',
+  descr: '',
+  fio: '',
+  tags: []
+}
 
 export const PostForm: FC<{
-  onSubmit: (values: FormData) => void;
-  postData?: IPost;
-  isPending: boolean;
-  actions: (form: UseFormReturn<PostFormValues>) => ReactNode;
+  onSubmit: (values: FormData) => void
+  postData?: IPost
+  isPending: boolean
+  actions: (form: UseFormReturn<PostFormValues>) => ReactNode
 }> = (props) => {
-  const { onSubmit, postData, isPending, actions } = props;
+  const { onSubmit, postData, isPending, actions } = props
 
-  const [file, setFile] = useState<File | null>(null);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const [isEditingFile, setEditingFile] = useState(true);
+  const [file, setFile] = useState<File | null>(null)
+  const [fileUrl, setFileUrl] = useState<string | null>(null)
+  const [isEditingFile, setEditingFile] = useState(true)
 
   const form = useForm<PostFormValues>({
     disabled: isPending,
-    defaultValues,
-  });
+    defaultValues
+  })
 
   const categoryQuery = useQuery({
     queryKey: [CategoryService.QueryKey.GetAll, { page: 1, limit: 100 }],
-    queryFn: CategoryService.getCategories,
-  });
+    queryFn: CategoryService.getCategories
+  })
 
   useEffect(() => {
     if (postData) {
@@ -67,51 +68,49 @@ export const PostForm: FC<{
         descr: postData.description,
         category_id: postData.category_id,
         content: postData.content,
-        tags: [],
-      });
-      setFileUrl(getImageUrl(postData.image));
-      setEditingFile(false);
+        tags: []
+      })
+      setFileUrl(getImageUrl(postData.image))
+      setEditingFile(false)
     } else {
-      form.reset(defaultValues);
+      form.reset(defaultValues)
     }
-  }, [form, postData]);
+  }, [form, postData])
 
   const handleSubmit = form.handleSubmit((values) => {
-    const formData = new FormData();
+    const formData = new FormData()
 
-    formData.append("title", values.title);
-    formData.append("content", values.content);
-    formData.append("fio", values.fio);
+    formData.append('title', values.title)
+    formData.append('content', values.content)
+    formData.append('fio', values.fio)
 
     if (file) {
-      formData.append("image", file);
+      formData.append('image', file)
     }
     if (values.descr) {
-      formData.append("description", values.descr);
+      formData.append('description', values.descr)
     }
     if (values.tags && values.tags.length > 0) {
-      values.tags.forEach((tag) => formData.append("tags[]", tag.toString()));
+      values.tags.forEach((tag) => formData.append('tags[]', tag.toString()))
     }
     if (values.category_id) {
-      formData.append("category_id", values.category_id.toString());
+      formData.append('category_id', values.category_id.toString())
     }
 
-    onSubmit(formData);
-  });
+    onSubmit(formData)
+  })
 
   const handleDrop = (item: DropItem) => {
-    if (item.kind === "file" && item.type?.startsWith("image/")) {
+    if (item.kind === 'file' && item.type?.startsWith('image/')) {
       item.getFile().then((f) => {
-        setFile(f);
-        setFileUrl(URL.createObjectURL(f));
-        setEditingFile(false);
-      });
+        setFile(f)
+        setFileUrl(URL.createObjectURL(f))
+        setEditingFile(false)
+      })
     }
-  };
+  }
 
-  const categoryData = categoryQuery.data?.data?.data ?? [];
-
-  console.log("categoryId", form.watch("category_id"));
+  const categoryData = categoryQuery.data?.data?.data ?? []
 
   return (
     <Form
@@ -134,11 +133,11 @@ export const PostForm: FC<{
               <View marginTop="size-200">
                 <FileTrigger
                   onSelect={(e) => {
-                    if (!e) return;
-                    const files = Array.from(e);
-                    setFile(files[0]);
-                    setFileUrl(URL.createObjectURL(files[0]));
-                    setEditingFile(false);
+                    if (!e) return
+                    const files = Array.from(e)
+                    setFile(files[0])
+                    setFileUrl(URL.createObjectURL(files[0]))
+                    setEditingFile(false)
                   }}
                 >
                   <Button variant="accent">Select a file</Button>
@@ -167,7 +166,10 @@ export const PostForm: FC<{
               />
             </Flex>
             <View>
-              <Button variant="primary">
+              <Button
+                variant="primary"
+                onPress={() => setEditingFile(true)}
+              >
                 <Icon>
                   <BiEdit />
                 </Icon>
@@ -232,7 +234,7 @@ export const PostForm: FC<{
                   menuTrigger="focus"
                   selectedKey={field.value ? String(field.value) : null}
                   onSelectionChange={(key) => {
-                    field.onChange(key ? Number(key) : undefined);
+                    field.onChange(key ? Number(key) : undefined)
                   }}
                   items={categoryData ?? []}
                 >
@@ -259,5 +261,5 @@ export const PostForm: FC<{
 
       {actions(form)}
     </Form>
-  );
-};
+  )
+}

@@ -1,11 +1,11 @@
-@import "tailwindcss";
-@import "./quill.css";
+@import 'tailwindcss';
+@import './quill.css';
 
 @theme {
-  --font-family-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-family-display: "Mrs Sheppards", cursive;
-  --font-family-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-family-mrs-sheppards: "Mrs Sheppards", cursive;
+  --font-family-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-family-display: 'Mrs Sheppards', cursive;
+  --font-family-geist: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-family-mrs-sheppards: 'Mrs Sheppards', cursive;
 }
 
 html,
@@ -30,6 +30,9 @@ button svg,
 button span {
   display: inline-block !important;
   vertical-align: middle !important;
+}
+button span {
+  line-height: 0.95em;
 }
 
 body {
