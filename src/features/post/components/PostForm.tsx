@@ -112,12 +112,17 @@ export const PostForm: FC<{
 
   const categoryData = categoryQuery.data?.data?.data ?? []
 
+  console.log({ content: form.watch('content') })
+
   return (
     <Form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-2.5"
+      className="h-full flex flex-col gap-2.5"
     >
-      <Flex gap="size-300">
+      <Flex
+        flex={1}
+        gap="size-300"
+      >
         {isEditingFile || !fileUrl ? (
           <DropZone
             width="540px"
@@ -244,14 +249,15 @@ export const PostForm: FC<{
             />
           </div>
 
-          <div className="mt-6 pb-20">
+          <div className="flex-1 mt-6 mb-20">
             <Controller
               control={form.control}
               name="content"
               render={({ field }) => (
                 <QuillEditor
                   {...field}
-                  className="h-96"
+                  className="h-full min-h-96"
+                  onValueChange={field.onChange}
                 />
               )}
             />

@@ -31,6 +31,9 @@ button span {
   display: inline-block !important;
   vertical-align: middle !important;
 }
+button span + svg {
+  margin-inline-end: 0.25rem !important;
+}
 button span {
   line-height: 0.95em;
 }
