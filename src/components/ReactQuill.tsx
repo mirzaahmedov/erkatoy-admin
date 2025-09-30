@@ -19,7 +19,10 @@ export interface ReactQuillProps extends HTMLAttributes<HTMLDivElement> {
   onSelectionChange?: (range: Range | null, oldRange: Range | null, source: EmitterSource) => void
 }
 const QuillEditor = forwardRef<{ getQuill: () => Quill | null }, ReactQuillProps>(
-  ({ readOnly, value, onTextChange, onValueChange, onSelectionChange, theme, modules }, ref) => {
+  (
+    { readOnly, value, onTextChange, onValueChange, onSelectionChange, theme, modules, ...props },
+    ref
+  ) => {
     const quillRef = useRef<Quill | null>(null)
     const containerRef = useRef<HTMLDivElement | null>(null)
     const onTextChangeRef = useRef(onTextChange)
@@ -85,7 +88,12 @@ const QuillEditor = forwardRef<{ getQuill: () => Quill | null }, ReactQuillProps
       }
     }, [value])
 
-    return <section ref={containerRef}></section>
+    return (
+      <section
+        ref={containerRef}
+        {...props}
+      ></section>
+    )
   }
 )
 

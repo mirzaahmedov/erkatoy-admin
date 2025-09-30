@@ -87,6 +87,9 @@ importers:
       '@eslint/js':
         specifier: ^9.33.0
         version: 9.34.0
+      '@react-types/shared':
+        specifier: ^3.32.0
+        version: 3.32.0(react@19.1.1)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^5.2.2
         version: 5.2.2(prettier@3.6.2)

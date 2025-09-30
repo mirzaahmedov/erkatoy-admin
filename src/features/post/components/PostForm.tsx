@@ -6,26 +6,20 @@ import { type FC, type ReactNode, useEffect, useState } from 'react'
 import {
   Button,
   ComboBox,
-  type DropItem,
-  DropZone,
-  FileTrigger,
   Flex,
-  Heading,
   Icon,
-  IllustratedMessage,
   Image,
   Item,
-  Text,
   TextArea,
   TextField,
   View
 } from '@adobe/react-spectrum'
-import Upload from '@spectrum-icons/illustrations/Upload'
 import { useQuery } from '@tanstack/react-query'
 import { Controller, type UseFormReturn, useForm } from 'react-hook-form'
 import { BiEdit } from 'react-icons/bi'
 import { Form } from 'react-router-dom'
 
+import { FileDropZone } from '@/components/FileDropZone'
 import { QuillEditor } from '@/components/QuillEditor'
 import { CategoryService } from '@/features/category/api'
 import { getImageUrl } from '@/utils/image'
@@ -46,9 +40,13 @@ export const PostForm: FC<{
 }> = (props) => {
   const { onSubmit, postData, isPending, actions } = props
 
-  const [file, setFile] = useState<File | null>(null)
-  const [fileUrl, setFileUrl] = useState<string | null>(null)
-  const [isEditingFile, setEditingFile] = useState(true)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [isImageEditing, setImageEditing] = useState(true)
+
+  const [gifFile, setGifFile] = useState<File | null>(null)
+  const [gifUrl, setGifUrl] = useState<string | null>(null)
+  const [isGifEditing, setGifEditing] = useState(true)
 
   const form = useForm<PostFormValues>({
     disabled: isPending,
@@ -70,8 +68,12 @@ export const PostForm: FC<{
         content: postData.content,
         tags: []
       })
-      setFileUrl(getImageUrl(postData.image))
-      setEditingFile(false)
+      setImageUrl(getImageUrl(postData.image))
+      setImageEditing(false)
+      if (postData.gif) {
+        setGifUrl(getImageUrl(postData.gif))
+      }
+      setGifEditing(false)
     } else {
       form.reset(defaultValues)
     }
@@ -84,8 +86,11 @@ export const PostForm: FC<{
     formData.append('content', values.content)
     formData.append('fio', values.fio)
 
-    if (file) {
-      formData.append('image', file)
+    if (imageFile) {
+      formData.append('image', imageFile)
+    }
+    if (gifFile) {
+      formData.append('gif', gifFile)
     }
     if (values.descr) {
       formData.append('description', values.descr)
@@ -100,94 +105,146 @@ export const PostForm: FC<{
     onSubmit(formData)
   })
 
-  const handleDrop = (item: DropItem) => {
-    if (item.kind === 'file' && item.type?.startsWith('image/')) {
-      item.getFile().then((f) => {
-        setFile(f)
-        setFileUrl(URL.createObjectURL(f))
-        setEditingFile(false)
-      })
-    }
-  }
-
   const categoryData = categoryQuery.data?.data?.data ?? []
 
-  console.log({ content: form.watch('content') })
+  const handleImageChange = (file: File) => {
+    setImageFile(file)
+    setImageUrl(URL.createObjectURL(file))
+    setImageEditing(false)
+  }
+
+  const handleGifChange = (file: File) => {
+    setGifFile(file)
+    setGifUrl(URL.createObjectURL(file))
+    setGifEditing(false)
+  }
 
   return (
     <Form
       onSubmit={handleSubmit}
-      className="h-full flex flex-col gap-2.5"
+      className="h-full flex flex-col gap-2.5 overflow-hidden"
     >
       <Flex
         flex={1}
         gap="size-300"
+        UNSAFE_className="min-h-0"
       >
-        {isEditingFile || !fileUrl ? (
-          <DropZone
-            width="540px"
-            height="360px"
-            onDrop={(e) => handleDrop(e.items[0])}
-            UNSAFE_className="!p-10"
-          >
-            <IllustratedMessage>
-              <Icon>
-                <Upload />
-              </Icon>
-              <Heading>Drag and drop your file</Heading>
-              <View marginTop="size-200">
-                <FileTrigger
-                  onSelect={(e) => {
-                    if (!e) return
-                    const files = Array.from(e)
-                    setFile(files[0])
-                    setFileUrl(URL.createObjectURL(files[0]))
-                    setEditingFile(false)
-                  }}
-                >
-                  <Button variant="accent">Select a file</Button>
-                </FileTrigger>
-              </View>
-            </IllustratedMessage>
-          </DropZone>
-        ) : (
-          <Flex
-            direction="column"
-            gap="size-200"
-          >
-            <Flex
-              width="540px"
-              height="360px"
-              justifyContent="center"
-              alignItems="center"
-              UNSAFE_className="bg-neutral-900 overflow-hidden"
-            >
-              <Image
-                src={fileUrl}
-                alt="Uploaded"
-                width="100%"
-                height="100%"
-                objectFit="contain"
+        <Flex
+          direction="column"
+          gap="size-400"
+        >
+          {/* Thumbnail Upload Section */}
+          <View UNSAFE_className="mb-2">
+            <strong style={{ fontSize: '1rem', display: 'block', marginBottom: 4 }}>
+              Thumbnail (Main Image)
+            </strong>
+            <span style={{ color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: 8 }}>
+              This image will be shown as the post thumbnail.
+            </span>
+            {isImageEditing || !imageUrl ? (
+              <FileDropZone
+                onFileChange={handleImageChange}
+                label="Upload Thumbnail"
               />
-            </Flex>
-            <View>
-              <Button
-                variant="primary"
-                onPress={() => setEditingFile(true)}
+            ) : (
+              <Flex
+                position="relative"
+                direction="column"
+                gap="size-200"
               >
-                <Icon>
-                  <BiEdit />
-                </Icon>
-                <Text>Edit</Text>
-              </Button>
-            </View>
-          </Flex>
-        )}
+                <Flex
+                  width="540px"
+                  height="360px"
+                  justifyContent="center"
+                  alignItems="center"
+                  UNSAFE_className="bg-neutral-900 overflow-hidden"
+                >
+                  <Image
+                    src={imageUrl}
+                    alt="Thumbnail Preview"
+                    width="100%"
+                    height="100%"
+                    objectFit="contain"
+                  />
+                </Flex>
+                <View
+                  position="absolute"
+                  right="size-100"
+                  bottom="size-100"
+                >
+                  <Button
+                    variant="primary"
+                    onPress={() => setImageEditing(true)}
+                    aria-label="Edit Thumbnail"
+                  >
+                    <Icon>
+                      <BiEdit />
+                    </Icon>
+                  </Button>
+                </View>
+              </Flex>
+            )}
+          </View>
+
+          <View UNSAFE_className="mb-2">
+            <strong style={{ fontSize: '1rem', display: 'block', marginBottom: 4 }}>
+              GIF (Hover Animation)
+            </strong>
+            <span style={{ color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: 8 }}>
+              This GIF will play when users hover over the post thumbnail.
+            </span>
+            {isGifEditing || !gifUrl ? (
+              <FileDropZone
+                onFileChange={handleGifChange}
+                label="Upload GIF"
+                acceptedTypes={['image/gif']}
+              />
+            ) : (
+              <Flex
+                position="relative"
+                direction="column"
+                gap="size-200"
+              >
+                <Flex
+                  width="540px"
+                  height="360px"
+                  justifyContent="center"
+                  alignItems="center"
+                  UNSAFE_className="bg-neutral-900 overflow-hidden"
+                >
+                  <Image
+                    src={gifUrl}
+                    alt="GIF Preview"
+                    width="100%"
+                    height="100%"
+                    objectFit="contain"
+                  />
+                </Flex>
+                <View
+                  position="absolute"
+                  right="size-100"
+                  bottom="size-100"
+                >
+                  <Button
+                    variant="primary"
+                    onPress={() => setGifEditing(true)}
+                    aria-label="Edit GIF"
+                  >
+                    <Icon>
+                      <BiEdit />
+                    </Icon>
+                  </Button>
+                </View>
+              </Flex>
+            )}
+          </View>
+        </Flex>
 
         <Flex
           flex={1}
           direction="column"
-          gap="size-200"
+          gap="size-50"
+          UNSAFE_className="min-h-0 h-full overflow-hidden"
         >
           <Controller
             control={form.control}
@@ -249,14 +306,14 @@ export const PostForm: FC<{
             />
           </div>
 
-          <div className="flex-1 mt-6 mb-20">
+          <div className="flex-1 min-h-0 overflow-hidden pt-4 pb-14">
             <Controller
               control={form.control}
               name="content"
               render={({ field }) => (
                 <QuillEditor
                   {...field}
-                  className="h-full min-h-96"
+                  className="h-full"
                   onValueChange={field.onChange}
                 />
               )}
