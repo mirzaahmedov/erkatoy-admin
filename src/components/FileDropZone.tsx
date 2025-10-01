@@ -52,8 +52,8 @@ export const FileDropZone: FC<FileDropZoneProps> = ({ label, acceptedTypes, onFi
 
   return (
     <DropZone
-      width="540px"
-      height="360px"
+      width="100%"
+      height="100%"
       onDrop={handleDrop}
       UNSAFE_className="!p-10"
     >

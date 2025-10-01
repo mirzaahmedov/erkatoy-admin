@@ -3,22 +3,13 @@ import type { IPost } from '@/entities/post'
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 
-import {
-  Button,
-  ComboBox,
-  Flex,
-  Icon,
-  Image,
-  Item,
-  TextArea,
-  TextField,
-  View
-} from '@adobe/react-spectrum'
+import { Button, ComboBox, Icon, Image, Item, TextArea, TextField } from '@adobe/react-spectrum'
 import { useQuery } from '@tanstack/react-query'
 import { Controller, type UseFormReturn, useForm } from 'react-hook-form'
 import { BiEdit } from 'react-icons/bi'
 import { Form } from 'react-router-dom'
 
+import { AspectRatio } from '@/components/AspectRatio'
 import { FileDropZone } from '@/components/FileDropZone'
 import { QuillEditor } from '@/components/QuillEditor'
 import { CategoryService } from '@/features/category/api'
@@ -122,130 +113,94 @@ export const PostForm: FC<{
   return (
     <Form
       onSubmit={handleSubmit}
-      className="h-full flex flex-col gap-2.5 overflow-hidden"
+      className="h-full flex flex-col"
     >
-      <Flex
-        flex={1}
-        gap="size-300"
-        UNSAFE_className="min-h-0"
-      >
-        <Flex
-          direction="column"
-          gap="size-400"
-        >
-          {/* Thumbnail Upload Section */}
-          <View UNSAFE_className="mb-2">
+      <div className="grid grid-cols-12 gap-8 p-5 flex-1">
+        <div className="col-span-4 flex flex-col gap-8">
+          <div>
             <strong style={{ fontSize: '1rem', display: 'block', marginBottom: 4 }}>
               Thumbnail (Main Image)
             </strong>
             <span style={{ color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: 8 }}>
               This image will be shown as the post thumbnail.
             </span>
-            {isImageEditing || !imageUrl ? (
-              <FileDropZone
-                onFileChange={handleImageChange}
-                label="Upload Thumbnail"
-              />
-            ) : (
-              <Flex
-                position="relative"
-                direction="column"
-                gap="size-200"
-              >
-                <Flex
-                  width="540px"
-                  height="360px"
-                  justifyContent="center"
-                  alignItems="center"
-                  UNSAFE_className="bg-neutral-900 overflow-hidden"
-                >
-                  <Image
-                    src={imageUrl}
-                    alt="Thumbnail Preview"
-                    width="100%"
-                    height="100%"
-                    objectFit="contain"
-                  />
-                </Flex>
-                <View
-                  position="absolute"
-                  right="size-100"
-                  bottom="size-100"
-                >
-                  <Button
-                    variant="primary"
-                    onPress={() => setImageEditing(true)}
-                    aria-label="Edit Thumbnail"
-                  >
-                    <Icon>
-                      <BiEdit />
-                    </Icon>
-                  </Button>
-                </View>
-              </Flex>
-            )}
-          </View>
+            <AspectRatio ratio={3 / 2}>
+              {isImageEditing || !imageUrl ? (
+                <FileDropZone
+                  onFileChange={handleImageChange}
+                  label="Upload Thumbnail"
+                />
+              ) : (
+                <div className="w-full h-full">
+                  <div className="w-full h-full bg-neutral-900 overflow-hidden">
+                    <Image
+                      src={imageUrl}
+                      alt="Thumbnail Preview"
+                      width="100%"
+                      height="100%"
+                      objectFit="contain"
+                    />
+                  </div>
+                  <div className="absolute right-4 bottom-4">
+                    <Button
+                      variant="primary"
+                      onPress={() => setImageEditing(true)}
+                      aria-label="Edit Thumbnail"
+                    >
+                      <Icon>
+                        <BiEdit />
+                      </Icon>
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </AspectRatio>
+          </div>
 
-          <View UNSAFE_className="mb-2">
+          <div>
             <strong style={{ fontSize: '1rem', display: 'block', marginBottom: 4 }}>
               GIF (Hover Animation)
             </strong>
             <span style={{ color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: 8 }}>
               This GIF will play when users hover over the post thumbnail.
             </span>
-            {isGifEditing || !gifUrl ? (
-              <FileDropZone
-                onFileChange={handleGifChange}
-                label="Upload GIF"
-                acceptedTypes={['image/gif']}
-              />
-            ) : (
-              <Flex
-                position="relative"
-                direction="column"
-                gap="size-200"
-              >
-                <Flex
-                  width="540px"
-                  height="360px"
-                  justifyContent="center"
-                  alignItems="center"
-                  UNSAFE_className="bg-neutral-900 overflow-hidden"
-                >
-                  <Image
-                    src={gifUrl}
-                    alt="GIF Preview"
-                    width="100%"
-                    height="100%"
-                    objectFit="contain"
-                  />
-                </Flex>
-                <View
-                  position="absolute"
-                  right="size-100"
-                  bottom="size-100"
-                >
-                  <Button
-                    variant="primary"
-                    onPress={() => setGifEditing(true)}
-                    aria-label="Edit GIF"
-                  >
-                    <Icon>
-                      <BiEdit />
-                    </Icon>
-                  </Button>
-                </View>
-              </Flex>
-            )}
-          </View>
-        </Flex>
 
-        <Flex
-          flex={1}
-          direction="column"
-          gap="size-50"
-          UNSAFE_className="min-h-0 h-full overflow-hidden"
-        >
+            <AspectRatio ratio={3 / 2}>
+              {isGifEditing || !gifUrl ? (
+                <FileDropZone
+                  onFileChange={handleGifChange}
+                  label="Upload GIF"
+                  acceptedTypes={['image/gif']}
+                />
+              ) : (
+                <div className="w-full h-full">
+                  <div className="w-full h-full bg-neutral-900 overflow-hidden">
+                    <Image
+                      src={gifUrl}
+                      alt="GIF Preview"
+                      width="100%"
+                      height="100%"
+                      objectFit="contain"
+                    />
+                  </div>
+                  <div className="absolute right-4 bottom-4">
+                    <Button
+                      variant="primary"
+                      onPress={() => setGifEditing(true)}
+                      aria-label="Edit GIF"
+                    >
+                      <Icon>
+                        <BiEdit />
+                      </Icon>
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </AspectRatio>
+          </div>
+        </div>
+
+        <div className="col-span-8 flex flex-col min-h-0 h-full">
           <Controller
             control={form.control}
             name="title"
@@ -319,10 +274,10 @@ export const PostForm: FC<{
               )}
             />
           </div>
-        </Flex>
-      </Flex>
 
-      {actions(form)}
+          {actions(form)}
+        </div>
+      </div>
     </Form>
   )
 }
