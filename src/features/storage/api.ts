@@ -1,5 +1,5 @@
+import type { IStorageImage } from '@/entities/StorageImage'
 import type { IApiListResponse, IApiResponse } from '@/entities/response'
-import type { IStorageImage } from '@/entities/storageImage'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { api } from '@/lib/http/axios'
