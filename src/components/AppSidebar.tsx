@@ -1,7 +1,9 @@
+import { BiCard, BiSolidGrid, BiTag } from 'react-icons/bi'
 import type { ComponentType, FC, SVGAttributes } from 'react'
 
-import { BiCard, BiSolidGrid, BiTag } from 'react-icons/bi'
+import { HiSpeakerphone } from "react-icons/hi"
 import { NavLink } from 'react-router-dom'
+import { PiGifFill } from "react-icons/pi"
 import { twMerge } from 'tailwind-merge'
 
 export const AppSidebar = () => {
@@ -22,6 +24,16 @@ export const AppSidebar = () => {
           label="Post"
           to="/post"
           icon={BiCard}
+        />
+        <NavItem
+          label="Gif"
+          to="/gif"
+          icon={PiGifFill}
+        />
+          <NavItem
+          label="Ads"
+          to="/ads"
+          icon={HiSpeakerphone}
         />
       </ul>
     </aside>

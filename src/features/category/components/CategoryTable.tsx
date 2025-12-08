@@ -1,13 +1,11 @@
+import { BiEdit, BiTrash } from "react-icons/bi";
+import { Button, ButtonGroup, Icon, Switch } from "@adobe/react-spectrum";
+
 import type { CustomCellRendererProps } from "ag-grid-react";
 import type { FC } from "react";
-
-import { Button, ButtonGroup, Checkbox, Icon } from "@adobe/react-spectrum";
-import { BiEdit, BiTrash } from "react-icons/bi";
-
 import { GenericTable } from "@/components/GenericTable";
-import { formatDate } from "@/utils/format/date";
-
 import type { ICategory } from "@/entities/category";
+import { formatDate } from "@/utils/format/date";
 
 export interface CategoryTableProps {
   rowData: ICategory[];
@@ -31,7 +29,7 @@ export const CategoryTable: FC<CategoryTableProps> = (props) => {
             field: "is_active",
             headerName: "Is Active",
             cellRenderer: ({ value }: CustomCellRendererProps) => (
-              <Checkbox isSelected={value} />
+              <Switch isSelected={value} />
             ),
           },
           {

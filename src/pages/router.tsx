@@ -1,13 +1,14 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 
+import { AdsPage } from "./ads/page";
 import { AppLayout } from "@/components/AppLayout";
 import { AuthGuard } from "@/features/auth/components/AuthGuard";
-
 import { AuthPage } from "./auth/page";
 import { CategoryPage } from "./category/page";
-import { TagPage } from "./tag/page";
+import { GifPage } from "./gif/page";
 import { PostPage } from "./post/page";
 import { PostViewPage } from "./post/[id]/page";
+import { TagPage } from "./tag/page";
 
 const router = createBrowserRouter(
   [
@@ -34,6 +35,14 @@ const router = createBrowserRouter(
             {
               path: "post/:id",
               element: <PostViewPage />,
+            },
+            {
+              path: "gif",
+              element: <GifPage />,
+            },
+            {
+              path: "ads",
+              element: <AdsPage />,
             },
             {
               path: "*",

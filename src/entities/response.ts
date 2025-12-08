@@ -1,7 +1,8 @@
-export interface IApiResponse<T> {
+export interface IApiResponse<T, M = unknown> {
   data: T
   message: string
   success: boolean
+  meta: M
 }
 
 export interface IPagination {

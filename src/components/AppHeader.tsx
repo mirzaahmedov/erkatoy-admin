@@ -7,8 +7,8 @@ import {
   Item,
   Text,
 } from "@adobe/react-spectrum";
-import { parseAsBoolean, useQueryState } from "nuqs";
 import { BiExit, BiPlus } from "react-icons/bi";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 import { useAuthStore } from "@/features/auth/store";
 import { useLayoutStore } from "@/features/layout/store";
@@ -31,7 +31,7 @@ export const AppHeader = () => {
           <div className="w-60 flex items-center gap-5">
             <h1 className="text-xl uppercase !font-family-display">Erkatoy</h1>
             <Badge
-              variant="neutral"
+              variant="positive"
               UNSAFE_className="!font-bold !text-xs !text-white"
             >
               <Text UNSAFE_className="text-xs">ADMIN</Text>
