@@ -21,7 +21,7 @@ export const AdsPage = () => {
   const [isDialogOpen, setDialogOpen] = useState(false)
 
   const postQuery = useQuery({
-    queryKey: [AdsService.QueryKey.GetAll, { page: 1, limit: 10 }],
+    queryKey: [AdsService.QueryKey.GetAll, { page: 1, limit: 1000000 }],
     queryFn: AdsService.getAds,
   });
   const postData = postQuery.data?.data ?? [];

@@ -21,7 +21,7 @@ export const GifPage = () => {
   const [gifData, setGifData] = useState<IGif | null>(null)
 
   const gifQuery = useQuery({
-    queryKey: [GifService.QueryKey.GetAll, { page: 1, limit: 10 }],
+    queryKey: [GifService.QueryKey.GetAll, { page: 1, limit: 100000 }],
     queryFn: GifService.getGifs,
   });
   const gifs = gifQuery.data?.data ?? [];
