@@ -1,1 +1,1 @@
-export * from "./components/PostTable";
+export * from './components/AdsTable'
