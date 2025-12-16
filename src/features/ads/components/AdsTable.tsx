@@ -1,10 +1,11 @@
-import { BiEdit, BiTrash } from 'react-icons/bi'
-import { Button, ButtonGroup, Icon, Image, Switch } from '@adobe/react-spectrum'
-
+import type { IAds } from '@/entities/ads'
 import type { CustomCellRendererProps } from 'ag-grid-react'
 import type { FC } from 'react'
+
+import { Button, ButtonGroup, Icon, Image, Switch } from '@adobe/react-spectrum'
+import { BiEdit, BiTrash } from 'react-icons/bi'
+
 import { GenericTable } from '@/components/GenericTable'
-import type { IAds } from '@/entities/ads'
 import { formatDate } from '@/utils/format/date'
 import { getImageUrl } from '@/utils/image'
 
@@ -42,7 +43,8 @@ export const AdsTable: FC<AdsTableProps> = (props) => {
           },
           {
             flex: 1,
-            field: 'title'
+            field: 'title',
+            headerName: 'Title'
           },
           {
             flex: 1,
@@ -54,16 +56,19 @@ export const AdsTable: FC<AdsTableProps> = (props) => {
           },
           {
             flex: 1,
-            field: "status",
-            headerName: "Is Active",
-            cellRenderer: ({ value }: CustomCellRendererProps) => (
-              <Switch isSelected={value} />
-            ),
+            field: 'status',
+            headerName: 'Is Active',
+            cellRenderer: ({ value }: CustomCellRendererProps) => <Switch isSelected={value} />
           },
           {
             flex: 1,
-            field: "type",
-            headerName: "Type"
+            field: 'cta_link',
+            headerName: 'CTA Link'
+          },
+          {
+            flex: 1,
+            field: 'cta_text',
+            headerName: 'CTA Text'
           },
           {
             flex: 1,

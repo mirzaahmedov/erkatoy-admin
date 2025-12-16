@@ -18,7 +18,8 @@ export const PostViewPage = () => {
   const postDataQuery = useQuery({
     queryKey: [PostService.QueryKey.GetById, id],
     queryFn: () => PostService.getPostId(Number(id)),
-    enabled: !!id && id !== 'create'
+    enabled: !!id && id !== 'create',
+    refetchOnWindowFocus: false
   })
   const createPostMutation = useMutation({
     mutationFn: PostService.createPost

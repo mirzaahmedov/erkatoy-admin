@@ -1,8 +1,18 @@
 import type { AdsFormValues } from '../schema'
+import type { IAds } from '@/entities/ads'
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 
-import { Button, Icon, Image, Switch, TextArea, TextField, Picker, Item } from '@adobe/react-spectrum'
+import {
+  Button,
+  Icon,
+  Image,
+  Item,
+  Picker,
+  Switch,
+  TextArea,
+  TextField
+} from '@adobe/react-spectrum'
 import { useQuery } from '@tanstack/react-query'
 import { Controller, type UseFormReturn, useForm } from 'react-hook-form'
 import { BiEdit } from 'react-icons/bi'
@@ -11,13 +21,14 @@ import { Form } from 'react-router-dom'
 import { AspectRatio } from '@/components/AspectRatio'
 import { FileDropZone } from '@/components/FileDropZone'
 import { AdsService } from '@/features/ads/api'
-import type { IAds } from '@/entities/ads'
 
 const defaultValues: AdsFormValues = {
   title: '',
-  description: "",
+  description: '',
   status: false,
-  type: "navbar"
+  type: 'navbar',
+  cta_link: '',
+  cta_text: ''
 }
 
 export const AdsForm: FC<{
@@ -45,7 +56,6 @@ export const AdsForm: FC<{
 
   const adsData = adsQuery.data?.data
 
-
   useEffect(() => {
     if (adsData && adData) {
       form.reset({
@@ -53,6 +63,8 @@ export const AdsForm: FC<{
         description: adsData.description,
         status: adsData.status,
         type: adsData.type,
+        cta_link: adsData.cta_link,
+        cta_text: adsData.cta_text
       })
       if (adsData.file_url) {
         setFileUrl(adsData.file_url)
@@ -68,8 +80,14 @@ export const AdsForm: FC<{
 
     formData.append('title', values.title)
     formData.append('type', values.type)
-    formData.append("status", (values.status ?? false).toString())
+    formData.append('status', (values.status ?? false).toString())
 
+    if (values.cta_link) {
+      formData.append('cta_link', values.cta_link)
+    }
+    if (values.cta_text) {
+      formData.append('cta_text', values.cta_text)
+    }
     if (file) {
       formData.append('file', file)
     }
@@ -80,13 +98,11 @@ export const AdsForm: FC<{
     onSubmit(formData)
   })
 
-
   const handleFileChange = (file: File) => {
     setFile(file)
     setFileUrl(URL.createObjectURL(file))
     setFileEditing(false)
   }
-
 
   return (
     <Form
@@ -160,7 +176,12 @@ export const AdsForm: FC<{
           control={form.control}
           name="status"
           render={({ field }) => (
-            <Switch ref={field.ref} isSelected={field.value} onChange={field.onChange} name={field.name}>
+            <Switch
+              ref={field.ref}
+              isSelected={field.value}
+              onChange={field.onChange}
+              name={field.name}
+            >
               Is Active
             </Switch>
           )}
@@ -170,10 +191,41 @@ export const AdsForm: FC<{
           control={form.control}
           name="type"
           render={({ field }) => (
-            <Picker selectedKey={field.value} onSelectionChange={field.onChange}>
+            <Picker
+              selectedKey={field.value}
+              onSelectionChange={field.onChange}
+            >
               <Item key="navbar">Navbar</Item>
               <Item key="side">Side</Item>
             </Picker>
+          )}
+        />
+
+        <Controller
+          control={form.control}
+          name="cta_link"
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              value={field.value || undefined}
+              label="CTA Link"
+              width="100%"
+              errorMessage={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={form.control}
+          name="cta_text"
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              value={field.value || undefined}
+              label="CTA Text"
+              width="100%"
+              errorMessage={fieldState.error?.message}
+            />
           )}
         />
 
