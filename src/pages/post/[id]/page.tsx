@@ -82,6 +82,7 @@ export const PostViewPage = () => {
           <ButtonGroup alignSelf="end">
             <Button
               variant="secondary"
+              isPending={createPostMutation.isPending || updatePostMutation.isPending}
               onPress={() => navigate(-1)}
             >
               Cancel

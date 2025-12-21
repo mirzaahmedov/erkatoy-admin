@@ -7,9 +7,9 @@ import { Button, ComboBox, Icon, Image, Item, TextArea, TextField } from '@adobe
 import { useQuery } from '@tanstack/react-query'
 import { Controller, type UseFormReturn, useForm } from 'react-hook-form'
 import { BiEdit } from 'react-icons/bi'
+import ReactPlayer from 'react-player'
 import { Form } from 'react-router-dom'
 
-import { AspectRatio } from '@/components/AspectRatio'
 import { FileDropZone } from '@/components/FileDropZone'
 import { QuillEditor } from '@/components/QuillEditor'
 import { CategoryService } from '@/features/category/api'
@@ -33,11 +33,15 @@ export const PostForm: FC<{
 
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
-  const [isImageEditing, setImageEditing] = useState(true)
+  const [isImageEditing, setIsImageEditing] = useState(true)
 
   const [gifFile, setGifFile] = useState<File | null>(null)
   const [gifUrl, setGifUrl] = useState<string | null>(null)
-  const [isGifEditing, setGifEditing] = useState(true)
+  const [isGifEditing, setIsGifEditing] = useState(true)
+
+  const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [isVideoEditing, setIsVideoEditing] = useState(true)
 
   const form = useForm<PostFormValues>({
     disabled: isPending,
@@ -60,11 +64,11 @@ export const PostForm: FC<{
         tags: []
       })
       setImageUrl(getImageUrl(postData.image))
-      setImageEditing(false)
+      setIsImageEditing(false)
       if (postData.gif) {
         setGifUrl(getImageUrl(postData.gif))
       }
-      setGifEditing(false)
+      setIsGifEditing(false)
     } else {
       form.reset(defaultValues)
     }
@@ -76,6 +80,7 @@ export const PostForm: FC<{
     formData.append('title', values.title)
     formData.append('content', values.content)
     formData.append('fio', values.fio)
+    formData.append('description', values.descr ?? '')
 
     if (imageFile) {
       formData.append('image', imageFile)
@@ -83,8 +88,8 @@ export const PostForm: FC<{
     if (gifFile) {
       formData.append('gif', gifFile)
     }
-    if (values.descr) {
-      formData.append('description', values.descr)
+    if (videoFile) {
+      formData.append('video', videoFile)
     }
     if (values.tags && values.tags.length > 0) {
       values.tags.forEach((tag) => formData.append('tags[]', tag.toString()))
@@ -101,13 +106,19 @@ export const PostForm: FC<{
   const handleImageChange = (file: File) => {
     setImageFile(file)
     setImageUrl(URL.createObjectURL(file))
-    setImageEditing(false)
+    setIsImageEditing(false)
   }
 
   const handleGifChange = (file: File) => {
     setGifFile(file)
     setGifUrl(URL.createObjectURL(file))
-    setGifEditing(false)
+    setIsGifEditing(false)
+  }
+
+  const handleVideoChange = (file: File) => {
+    setVideoFile(file)
+    setVideoUrl(URL.createObjectURL(file))
+    setIsVideoEditing(false)
   }
 
   return (
@@ -116,91 +127,35 @@ export const PostForm: FC<{
       className="h-full flex flex-col"
     >
       <div className="grid grid-cols-12 gap-8 p-5 flex-1">
-        <div className="col-span-4 flex flex-col gap-8">
-          <div>
-            <strong style={{ fontSize: '1rem', display: 'block', marginBottom: 4 }}>
-              Thumbnail (Main Image)
-            </strong>
-            <span style={{ color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: 8 }}>
-              This image will be shown as the post thumbnail.
-            </span>
-            <AspectRatio ratio={3 / 2}>
-              {isImageEditing || !imageUrl ? (
-                <FileDropZone
-                  onFileChange={handleImageChange}
-                  label="Upload Thumbnail"
-                />
-              ) : (
-                <div className="w-full h-full">
-                  <div className="w-full h-full bg-neutral-900 overflow-hidden">
-                    <Image
-                      src={imageUrl}
-                      alt="Thumbnail Preview"
-                      width="100%"
-                      height="100%"
-                      objectFit="contain"
-                    />
-                  </div>
-                  <div className="absolute right-4 bottom-4">
-                    <Button
-                      variant="primary"
-                      onPress={() => setImageEditing(true)}
-                      aria-label="Edit Thumbnail"
-                    >
-                      <Icon>
-                        <BiEdit />
-                      </Icon>
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </AspectRatio>
-          </div>
+        <div className="col-span-4 flex flex-col gap-6">
+          <MediaCard
+            title="Thumbnail"
+            src={imageUrl}
+            isEditing={isImageEditing}
+            onEdit={() => setIsImageEditing(true)}
+            onFileChange={handleImageChange}
+          />
 
-          <div>
-            <strong style={{ fontSize: '1rem', display: 'block', marginBottom: 4 }}>
-              GIF (Hover Animation)
-            </strong>
-            <span style={{ color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: 8 }}>
-              This GIF will play when users hover over the post thumbnail.
-            </span>
+          <MediaCard
+            title="GIF (Hover)"
+            src={gifUrl}
+            isEditing={isGifEditing}
+            onEdit={() => setIsGifEditing(true)}
+            onFileChange={handleGifChange}
+            accept={['image/gif']}
+          />
 
-            <AspectRatio ratio={3 / 2}>
-              {isGifEditing || !gifUrl ? (
-                <FileDropZone
-                  onFileChange={handleGifChange}
-                  label="Upload GIF"
-                  acceptedTypes={['image/gif']}
-                />
-              ) : (
-                <div className="w-full h-full">
-                  <div className="w-full h-full bg-neutral-900 overflow-hidden">
-                    <Image
-                      src={gifUrl}
-                      alt="GIF Preview"
-                      width="100%"
-                      height="100%"
-                      objectFit="contain"
-                    />
-                  </div>
-                  <div className="absolute right-4 bottom-4">
-                    <Button
-                      variant="primary"
-                      onPress={() => setGifEditing(true)}
-                      aria-label="Edit GIF"
-                    >
-                      <Icon>
-                        <BiEdit />
-                      </Icon>
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </AspectRatio>
-          </div>
+          <MediaCard
+            title="Video"
+            src={videoUrl}
+            isEditing={isVideoEditing}
+            onEdit={() => setIsVideoEditing(true)}
+            onFileChange={handleVideoChange}
+            accept={['video/mp4']}
+          />
         </div>
 
-        <div className="col-span-8 flex flex-col min-h-0 h-full">
+        <div className="col-span-8 flex flex-col min-h-0 gap-4">
           <Controller
             control={form.control}
             name="title"
@@ -240,7 +195,6 @@ export const PostForm: FC<{
                 />
               )}
             />
-
             <Controller
               control={form.control}
               name="category_id"
@@ -261,7 +215,7 @@ export const PostForm: FC<{
             />
           </div>
 
-          <div className="flex-1 min-h-0 overflow-hidden pt-4 pb-14">
+          <div className="flex-1 min-h-0 overflow-hidden pb-20">
             <Controller
               control={form.control}
               name="content"
@@ -279,5 +233,70 @@ export const PostForm: FC<{
         </div>
       </div>
     </Form>
+  )
+}
+
+const isVideo = (accept?: string[], src?: string | null) => {
+  if (accept?.some((t) => t.startsWith('video/'))) return true
+  if (!src) return false
+  return /\.(mp4|webm|ogg)$/i.test(src)
+}
+
+const MediaCard: FC<{
+  title: string
+  src?: string | null
+  isEditing: boolean
+  onEdit: () => void
+  onFileChange: (file: File) => void
+  accept?: string[]
+}> = ({ title, src, isEditing, onEdit, onFileChange, accept }) => {
+  const video = isVideo(accept, src)
+
+  return (
+    <div className="flex flex-col gap-2">
+      <strong className="text-sm">{title}</strong>
+
+      <div className="relative overflow-hidden min-h-[180px]">
+        {isEditing || !src ? (
+          <FileDropZone
+            onFileChange={onFileChange}
+            acceptedTypes={accept}
+            label={`Upload ${title}`}
+          />
+        ) : (
+          <>
+            {video ? (
+              <ReactPlayer
+                src={src}
+                controls
+                width="100%"
+                height="100%"
+              />
+            ) : (
+              <Image
+                src={src}
+                alt={title}
+                width="100%"
+                height="100%"
+                objectFit="contain"
+              />
+            )}
+
+            <div className="absolute top-3 right-3">
+              <Button
+                variant="primary"
+                onPress={onEdit}
+                aria-label={`Edit ${title}`}
+                UNSAFE_className="backdrop-blur"
+              >
+                <Icon>
+                  <BiEdit />
+                </Icon>
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   )
 }
