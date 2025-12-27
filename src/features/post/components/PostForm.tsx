@@ -65,10 +65,16 @@ export const PostForm: FC<{
       })
       setImageUrl(getImageUrl(postData.image))
       setIsImageEditing(false)
+
       if (postData.gif) {
         setGifUrl(getImageUrl(postData.gif))
       }
       setIsGifEditing(false)
+
+      if (postData.video) {
+        setVideoUrl(getImageUrl(postData.video))
+      }
+      setIsVideoEditing(false)
     } else {
       form.reset(defaultValues)
     }
