@@ -1,19 +1,22 @@
-import type { PostFormValues } from '../schema'
 import type { IPost } from '@/entities/post'
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 
 import { Button, ComboBox, Icon, Image, Item, TextArea, TextField } from '@adobe/react-spectrum'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import { Controller, type UseFormReturn, useForm } from 'react-hook-form'
 import { BiEdit } from 'react-icons/bi'
 import ReactPlayer from 'react-player'
 import { Form } from 'react-router-dom'
+import { twMerge } from 'tailwind-merge'
 
 import { FileDropZone } from '@/components/FileDropZone'
 import { QuillEditor } from '@/components/QuillEditor'
 import { CategoryService } from '@/features/category/api'
 import { getImageUrl } from '@/utils/image'
+
+import { PostFormSchema, type PostFormValues } from '../schema'
 
 const defaultValues: PostFormValues = {
   title: '',
@@ -45,6 +48,7 @@ export const PostForm: FC<{
 
   const form = useForm<PostFormValues>({
     disabled: isPending,
+    resolver: zodResolver(PostFormSchema),
     defaultValues
   })
 
@@ -52,6 +56,7 @@ export const PostForm: FC<{
     queryKey: [CategoryService.QueryKey.GetAll, { page: 1, limit: 100 }],
     queryFn: CategoryService.getCategories
   })
+  const categoryData = categoryQuery.data?.data?.data ?? []
 
   useEffect(() => {
     if (postData) {
@@ -106,8 +111,6 @@ export const PostForm: FC<{
 
     onSubmit(formData)
   })
-
-  const categoryData = categoryQuery.data?.data?.data ?? []
 
   const handleImageChange = (file: File) => {
     setImageFile(file)
@@ -170,6 +173,7 @@ export const PostForm: FC<{
                 {...field}
                 label="Title"
                 width="100%"
+                validationState={fieldState.invalid ? 'invalid' : undefined}
                 errorMessage={fieldState.error?.message}
               />
             )}
@@ -183,6 +187,7 @@ export const PostForm: FC<{
                 {...field}
                 label="Description"
                 width="100%"
+                validationState={fieldState.invalid ? 'invalid' : undefined}
                 errorMessage={fieldState.error?.message}
               />
             )}
@@ -197,6 +202,7 @@ export const PostForm: FC<{
                   {...field}
                   label="FIO"
                   width="100%"
+                  validationState={fieldState.invalid ? 'invalid' : undefined}
                   errorMessage={fieldState.error?.message}
                 />
               )}
@@ -225,12 +231,14 @@ export const PostForm: FC<{
             <Controller
               control={form.control}
               name="content"
-              render={({ field }) => (
-                <QuillEditor
-                  {...field}
-                  className="h-full"
-                  onValueChange={field.onChange}
-                />
+              render={({ field, fieldState }) => (
+                <div className={twMerge('h-full', fieldState.invalid && 'border border-red-500')}>
+                  <QuillEditor
+                    {...field}
+                    className="h-full"
+                    onValueChange={field.onChange}
+                  />
+                </div>
               )}
             />
           </div>

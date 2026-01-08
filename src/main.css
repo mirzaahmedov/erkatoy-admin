@@ -2,9 +2,9 @@
 @import './quill.css';
 
 @theme {
-  --font-family-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-family-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
   --font-family-display: 'Mrs Sheppards', cursive;
-  --font-family-geist: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-family-geist: 'Nunito', ui-sans-serif, system-ui, sans-serif;
   --font-family-mrs-sheppards: 'Mrs Sheppards', cursive;
 
   --color-primary: #f27420;
