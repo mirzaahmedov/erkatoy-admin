@@ -2,12 +2,15 @@ import type { IAds } from '@/entities/ads'
 import type { CustomCellRendererProps } from 'ag-grid-react'
 import type { FC } from 'react'
 
-import { Button, ButtonGroup, Icon, Image, Switch } from '@adobe/react-spectrum'
+import { Button, ButtonGroup, Icon, Image, ProgressCircle, Switch } from '@adobe/react-spectrum'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { BiEdit, BiTrash } from 'react-icons/bi'
 
 import { GenericTable } from '@/components/GenericTable'
 import { formatDate } from '@/utils/format/date'
 import { getImageUrl } from '@/utils/image'
+
+import { AdsService } from '../api'
 
 export interface AdsTableProps {
   rowData: IAds[]
@@ -110,5 +113,27 @@ export const AdsTable: FC<AdsTableProps> = (props) => {
         ]}
       />
     </div>
+  )
+}
+
+const StatusCell = ({ value, data }: CustomCellRendererProps) => {
+  const queryClient = useQueryClient()
+
+  const updateStatus = useMutation({
+    mutationFn: (status: boolean) => AdsService.updateAds(data.id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [AdsService.QueryKey.GetAll]
+      })
+    }
+  })
+
+  return updateStatus.isPending ? (
+    <ProgressCircle isIndeterminate />
+  ) : (
+    <Switch
+      isSelected={value}
+      onChange={(selected) => updateStatus.mutate(selected)}
+    ></Switch>
   )
 }
