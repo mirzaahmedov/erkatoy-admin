@@ -24,6 +24,7 @@ export const AdsTable: FC<AdsTableProps> = (props) => {
     <div className="h-full">
       <GenericTable
         rowData={rowData}
+        animateRows={false}
         columnDefs={[
           {
             flex: 1,
@@ -61,7 +62,7 @@ export const AdsTable: FC<AdsTableProps> = (props) => {
             flex: 1,
             field: 'status',
             headerName: 'Is Active',
-            cellRenderer: ({ value }: CustomCellRendererProps) => <Switch isSelected={value} />
+            cellRenderer: StatusCell
           },
           {
             flex: 1,
@@ -120,7 +121,7 @@ const StatusCell = ({ value, data }: CustomCellRendererProps) => {
   const queryClient = useQueryClient()
 
   const updateStatus = useMutation({
-    mutationFn: (status: boolean) => AdsService.updateAds(data.id, status),
+    mutationFn: (status: boolean) => AdsService.updateAdsStatus(data.id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [AdsService.QueryKey.GetAll]
