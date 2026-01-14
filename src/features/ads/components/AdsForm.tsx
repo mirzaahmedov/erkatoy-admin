@@ -7,8 +7,8 @@ import {
   Button,
   Icon,
   Image,
-  Item,
-  Picker,
+  // Item,
+  // Picker,
   Switch,
   TextArea,
   TextField
@@ -26,7 +26,7 @@ const defaultValues: AdsFormValues = {
   title: '',
   description: '',
   status: false,
-  type: 'navbar',
+  type: 'side',
   cta_link: '',
   cta_text: ''
 }
@@ -187,7 +187,7 @@ export const AdsForm: FC<{
           )}
         />
 
-        <Controller
+        {/* <Controller
           control={form.control}
           name="type"
           render={({ field }) => (
@@ -199,7 +199,7 @@ export const AdsForm: FC<{
               <Item key="side">Side</Item>
             </Picker>
           )}
-        />
+        /> */}
 
         <Controller
           control={form.control}
